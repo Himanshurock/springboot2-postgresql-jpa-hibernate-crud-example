@@ -1,0 +1,52 @@
+version: '1.0'
+stages:
+  - prepare
+  - test
+#   - build
+  - 'integration test'
+steps:
+  main_clone:
+    title: Cloning main repository...
+    stage: prepare
+    type: git-clone
+    repo: 'Himanshurock/springboot2-postgresql-jpa-hibernate-crud-example'
+    revision: master
+    git: github
+  run_unit_tests:
+    title: Compile/Unit test
+    stage: test
+    image: 'maven:3.5.2-jdk-8-alpine'
+    commands:
+      - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository test     
+#   build_app_image:
+#     title: Building Docker Image
+#     type: build
+#     stage: build
+#     image_name: app
+#     working_directory: ./
+#     tag: 'multi-stage'
+#     dockerfile: Dockerfile
+  run_integration_tests:
+    title: Integration test
+    stage: 'integration test'
+    image: maven:3.5.2-jdk-8-alpine
+    commands:
+     - env
+     - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository integration-test
+    environment:
+     - POSTGRES_HOST=postgres
+     - spring.datasource.url=jdbc:postgresql://postgres:5432/postgres
+     - spring.datasource.username=postgres
+     - spring.datasource.password=postgres
+    services:
+      composition:
+       postgres:
+          image: postgres:11.5       
+          ports:
+             - 5432           
+      readiness:
+        timeoutSeconds: 30
+        periodSeconds: 15
+        image: postgres:11.5
+        commands:
+          - "pg_isready -h postgres -U postgres"   
