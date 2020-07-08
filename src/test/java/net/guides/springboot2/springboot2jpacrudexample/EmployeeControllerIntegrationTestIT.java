@@ -43,17 +43,17 @@ public class EmployeeControllerIntegrationTestIT {
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<String> entity = new HttpEntity<String>(null, headers);
 
-		ResponseEntity<String> response = restTemplate.exchange(getRootUrl() + "/employees",
+		ResponseEntity<String> response = restTemplate.exchange(getRootUrl() + "/api/v1/employees",
 				HttpMethod.GET, entity, String.class);
-		
 		assertNotNull(response.getBody());
 	}
 
 	@Test
 	public void testGetEmployeeById() {
-		Employee employee = restTemplate.getForObject(getRootUrl() + "/employees/1", Employee.class);
+		Employee employee = restTemplate.getForObject(getRootUrl() + "/api/v1/employees/1", Employee.class);
 		System.out.println(employee.getFirstName());
 		assertNotNull(employee);
+		assertNotNull(employee.getFirstName());
 	}
 
 	@Test
@@ -71,26 +71,26 @@ public class EmployeeControllerIntegrationTestIT {
 	@Test
 	public void testUpdateEmployee() {
 		int id = 1;
-		Employee employee = restTemplate.getForObject(getRootUrl() + "/employees/" + id, Employee.class);
+		Employee employee = restTemplate.getForObject(getRootUrl() + "/api/v1/employees/" + id, Employee.class);
 		employee.setFirstName("admin1");
 		employee.setLastName("admin2");
 
-		restTemplate.put(getRootUrl() + "/employees/" + id, employee);
+		restTemplate.put(getRootUrl() + "/api/v1/employees/" + id, employee);
 
-		Employee updatedEmployee = restTemplate.getForObject(getRootUrl() + "/employees/" + id, Employee.class);
+		Employee updatedEmployee = restTemplate.getForObject(getRootUrl() + "/api/v1/employees/" + id, Employee.class);
 		assertNotNull(updatedEmployee);
 	}
 
 	@Test
 	public void testDeleteEmployee() {
 		int id = 2;
-		Employee employee = restTemplate.getForObject(getRootUrl() + "/employees/" + id, Employee.class);
+		Employee employee = restTemplate.getForObject(getRootUrl() + "/api/v1/employees/" + id, Employee.class);
 		assertNotNull(employee);
 
-		restTemplate.delete(getRootUrl() + "/employees/" + id);
+		restTemplate.delete(getRootUrl() + "/api/v1/employees/" + id);
 
 		try {
-			employee = restTemplate.getForObject(getRootUrl() + "/employees/" + id, Employee.class);
+			employee = restTemplate.getForObject(getRootUrl() + "/api/v1/employees/" + id, Employee.class);
 		} catch (final HttpClientErrorException e) {
 			assertEquals(e.getStatusCode(), HttpStatus.NOT_FOUND);
 		}
