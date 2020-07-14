@@ -17,15 +17,7 @@ steps:
     stage: test
     image: 'maven:3.5.2-jdk-8-alpine'
     commands:
-      - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository test     
-#   build_app_image:
-#     title: Building Docker Image
-#     type: build
-#     stage: build
-#     image_name: app
-#     working_directory: ./
-#     tag: 'multi-stage'
-#     dockerfile: Dockerfile
+      - mvn -Dmaven.repo.local=/codefresh/volume/m2_repository test
   run_integration_tests:
     title: Integration test
     stage: 'integration test'
@@ -49,4 +41,4 @@ steps:
         periodSeconds: 15
         image: postgres:11.5
         commands:
-          - "pg_isready -h postgres -U postgres"   
+          - "pg_isready -h postgres -U postgres"
