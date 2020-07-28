@@ -7,4 +7,6 @@ RUN mkdir /work
 EXPOSE 8082
 
 # Copying the application's jar file inside the container
-COPY target/springboot2-postgresql-jpa-hibernate-crud-example-0.0.1-SNAPSHOT.jar
+COPY target/springboot2-postgresql-jpa-hibernate-crud-example-0.0.1-SNAPSHOT.jar /work/spring-boot-application.jar
+
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/work/spring-boot-application.jar"]
